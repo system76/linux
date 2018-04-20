@@ -14766,6 +14766,14 @@ F:	drivers/hwtracing/stm/
 F:	include/linux/stm.h
 F:	include/uapi/linux/stm.h
 
+SYSTEM76 PLATFORM DRIVERS
+M:	Jeremy Soller <jeremy@system76.com>
+L:	productdev@system76.com
+L:	platform-driver-x86@vger.kernel.org
+W:	https://system76.com
+S:	Maintained
+F:	drivers/platform/x86/system76*.c
+
 SYSV FILESYSTEM
 M:	Christoph Hellwig <hch@infradead.org>
 S:	Maintained
