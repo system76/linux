@@ -10,6 +10,7 @@ fi
 
 package="$(dpkg-parsechangelog --file "debian.master/changelog" --show-field Source)"
 version="$(dpkg-parsechangelog --file "debian.master/changelog" --show-field Version)"
+distribution="$(dpkg-parsechangelog --file "debian.master/changelog" --show-field Distribution)"
 
 linux_version="$(echo "${version}" | cut -d "-" -f1)"
 debian_version="$(echo "${version}" | cut -d "-" -f2-)"
@@ -19,7 +20,7 @@ then
     echo "${package} ${version} already updated for system76"
 else
     new_version="${linux_version}-76${debian_version}"
-    sed -i "s/${package} (${version})/${package} (${new_version})/" "debian.master/changelog"
+    sed -i "s/${package} (${version}) ${distribution}/${package} (${new_version}) bionic/" "debian.master/changelog"
     dch --changelog "debian.master/changelog" --release 'Release for System76'
 fi
 
