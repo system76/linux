@@ -34,10 +34,11 @@ Build-Depends:
  automake <!stage1>,
  libtool <!stage1>,
  uuid-dev <!stage1>,
+ binutils-dev <!stage1>,
  libnuma-dev [amd64 arm64 ppc64el s390x] <!stage1>,
  dkms <!stage1>,
  wget <!stage1>,
- lz4 [amd64 s390x] <!stage1>,
+ spl-dkms <!stage1>,
 Build-Depends-Indep:
  xmlto <!stage1>,
  docbook-utils <!stage1>,
