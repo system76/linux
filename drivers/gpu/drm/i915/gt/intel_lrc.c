@@ -2504,11 +2504,23 @@ invalidate_csb_entries(const u32 *first, const u32 *last)
 static inline bool
 gen12_csb_parse(const struct intel_engine_execlists *execlists, const u32 *csb)
 {
-	u32 lower_dw = csb[0];
-	u32 upper_dw = csb[1];
-	bool ctx_to_valid = GEN12_CSB_CTX_VALID(lower_dw);
-	bool ctx_away_valid = GEN12_CSB_CTX_VALID(upper_dw);
-	bool new_queue = lower_dw & GEN12_CTX_STATUS_SWITCHED_TO_NEW_QUEUE;
+	bool ctx_away_valid;
+	bool new_queue;
+	u64 entry;
+
+	/* HSD#22011248461 */
+	entry = READ_ONCE(*csb);
+	if (unlikely(entry == -1)) {
+		preempt_disable();
+		if (wait_for_atomic_us((entry = READ_ONCE(*csb)) != -1, 50))
+			GEM_WARN_ON("50us CSB timeout");
+		preempt_enable();
+	}
+	WRITE_ONCE(*(u64 *)csb, -1);
+
+	ctx_away_valid = GEN12_CSB_CTX_VALID(upper_32_bits(entry));
+	new_queue =
+		lower_32_bits(entry) & GEN12_CTX_STATUS_SWITCHED_TO_NEW_QUEUE;
 
 	/*
 	 * The context switch detail is not guaranteed to be 5 when a preemption
@@ -2518,7 +2530,7 @@ gen12_csb_parse(const struct intel_engine_execlists *execlists, const u32 *csb)
 	 * would require some extra handling, but we don't support that.
 	 */
 	if (!ctx_away_valid || new_queue) {
-		GEM_BUG_ON(!ctx_to_valid);
+		GEM_BUG_ON(!GEN12_CSB_CTX_VALID(lower_32_bits(entry)));
 		return true;
 	}
 
@@ -2527,7 +2539,7 @@ gen12_csb_parse(const struct intel_engine_execlists *execlists, const u32 *csb)
 	 * context switch on an unsuccessful wait instruction since we always
 	 * use polling mode.
 	 */
-	GEM_BUG_ON(GEN12_CTX_SWITCH_DETAIL(upper_dw));
+	GEM_BUG_ON(GEN12_CTX_SWITCH_DETAIL(upper_32_bits(entry)));
 	return false;
 }
 
@@ -3966,6 +3978,8 @@ static void reset_csb_pointers(struct intel_engine_cs *engine)
 	WRITE_ONCE(*execlists->csb_write, reset_value);
 	wmb(); /* Make sure this is visible to HW (paranoia?) */
 
+	/* Check that the GPU does indeed update the CSB entries! */
+	memset(execlists->csb_status, -1, (reset_value + 1) * sizeof(u64));
 	invalidate_csb_entries(&execlists->csb_status[0],
 			       &execlists->csb_status[reset_value]);
 
