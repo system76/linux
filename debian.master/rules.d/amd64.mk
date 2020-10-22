@@ -18,6 +18,7 @@ do_tools_bpftool = true
 do_tools_x86	= true
 do_tools_hyperv	= true
 do_tools_host = true
+do_doc_package	= false
 do_extras_package = true
 do_tools_common = true
 do_tools_acpidbg = true
