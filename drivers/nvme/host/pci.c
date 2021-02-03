@@ -2784,6 +2784,19 @@ static unsigned long check_vendor_combination_bug(struct pci_dev *pdev)
 		if ((dmi_match(DMI_BOARD_VENDOR, "LENOVO")) &&
 		     dmi_match(DMI_BOARD_NAME, "LNVNB161216"))
 			return NVME_QUIRK_SIMPLE_SUSPEND;
+	} else if (pdev->vendor == 0x1987 && pdev->device == 0x5012) {
+		/*
+		 * On some System76 laptops with Tiger Lake boards,
+		 * Sabrent Rocket Q 4TB and 8TB drives drop off the
+		 * PCIe bus when exiting the deepest APST state
+		 * or exiting from suspend.
+		 */
+		if (dmi_match(DMI_BOARD_VENDOR, "System76") &&
+		    (dmi_match(DMI_BOARD_VERSION, "darp7") ||
+		     dmi_match(DMI_BOARD_VERSION, "galp5") ||
+		     dmi_match(DMI_BOARD_VERSION, "lemp9") ||
+		     dmi_match(DMI_BOARD_VERSION, "lemp10")))
+			return NVME_QUIRK_NO_DEEPEST_PS | NVME_QUIRK_SIMPLE_SUSPEND;
 	}
 
 	return 0;
