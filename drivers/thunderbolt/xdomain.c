@@ -57,7 +57,7 @@ static const uuid_t tb_xdp_uuid =
 
 bool tb_is_xdomain_enabled(void)
 {
-	return tb_xdomain_enabled && tb_acpi_is_xdomain_allowed();
+	return tb_xdomain_enabled;
 }
 
 static bool tb_xdomain_match(const struct tb_cfg_request *req,
