@@ -1504,8 +1504,8 @@ static int intel_pinctrl_pm_init(struct intel_pinctrl *pctrl)
 	return 0;
 }
 
-static int intel_pinctrl_probe(struct platform_device *pdev,
-			       const struct intel_pinctrl_soc_data *soc_data)
+int intel_pinctrl_probe(struct platform_device *pdev,
+			const struct intel_pinctrl_soc_data *soc_data)
 {
 	struct intel_pinctrl *pctrl;
 	int i, ret, irq;
@@ -1619,6 +1619,7 @@ static int intel_pinctrl_probe(struct platform_device *pdev,
 
 	return 0;
 }
+EXPORT_SYMBOL_GPL(intel_pinctrl_probe);
 
 int intel_pinctrl_probe_by_hid(struct platform_device *pdev)
 {
