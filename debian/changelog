@@ -1,0 +1,6 @@
+linux (5.15.5-76051505.202111250933) jammy; urgency=low
+
+  [ Mainline Build ]
+  Mainline build at commit: v5.15.5
+
+ -- Jeremy Soller <jeremy@system76.com>  Mon, 29 Nov 2021 08:59:38 -0700

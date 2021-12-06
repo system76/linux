@@ -988,8 +988,9 @@ static __init void ftrace_profile_tracefs(struct dentry *d_tracer)
 		}
 	}
 
-	entry = tracefs_create_file("function_profile_enabled", 0644,
-				    d_tracer, NULL, &ftrace_profile_fops);
+	entry = tracefs_create_file("function_profile_enabled",
+				    TRACE_MODE_WRITE, d_tracer, NULL,
+				    &ftrace_profile_fops);
 	if (!entry)
 		pr_warn("Could not create tracefs 'function_profile_enabled' entry\n");
 }
@@ -2208,7 +2209,7 @@ static int ftrace_check_record(struct dyn_ftrace *rec, bool enable, bool update)
 }
 
 /**
- * ftrace_update_record, set a record that now is tracing or not
+ * ftrace_update_record - set a record that now is tracing or not
  * @rec: the record to update
  * @enable: set to true if the record is tracing, false to force disable
  *
@@ -2221,7 +2222,7 @@ int ftrace_update_record(struct dyn_ftrace *rec, bool enable)
 }
 
 /**
- * ftrace_test_record, check if the record has been enabled or not
+ * ftrace_test_record - check if the record has been enabled or not
  * @rec: the record to test
  * @enable: set to true to check if enabled, false if it is disabled
  *
@@ -2574,7 +2575,7 @@ struct ftrace_rec_iter {
 };
 
 /**
- * ftrace_rec_iter_start, start up iterating over traced functions
+ * ftrace_rec_iter_start - start up iterating over traced functions
  *
  * Returns an iterator handle that is used to iterate over all
  * the records that represent address locations where functions
@@ -2605,7 +2606,7 @@ struct ftrace_rec_iter *ftrace_rec_iter_start(void)
 }
 
 /**
- * ftrace_rec_iter_next, get the next record to process.
+ * ftrace_rec_iter_next - get the next record to process.
  * @iter: The handle to the iterator.
  *
  * Returns the next iterator after the given iterator @iter.
@@ -2630,7 +2631,7 @@ struct ftrace_rec_iter *ftrace_rec_iter_next(struct ftrace_rec_iter *iter)
 }
 
 /**
- * ftrace_rec_iter_record, get the record at the iterator location
+ * ftrace_rec_iter_record - get the record at the iterator location
  * @iter: The current iterator location
  *
  * Returns the record that the current @iter is at.
@@ -2733,7 +2734,7 @@ static int __ftrace_modify_code(void *data)
 }
 
 /**
- * ftrace_run_stop_machine, go back to the stop machine method
+ * ftrace_run_stop_machine - go back to the stop machine method
  * @command: The command to tell ftrace what to do
  *
  * If an arch needs to fall back to the stop machine method, the
@@ -2745,7 +2746,7 @@ void ftrace_run_stop_machine(int command)
 }
 
 /**
- * arch_ftrace_update_code, modify the code to trace or not trace
+ * arch_ftrace_update_code - modify the code to trace or not trace
  * @command: The command that needs to be done
  *
  * Archs can override this function if it does not need to
@@ -6109,10 +6110,10 @@ void ftrace_create_filter_files(struct ftrace_ops *ops,
 				struct dentry *parent)
 {
 
-	trace_create_file("set_ftrace_filter", 0644, parent,
+	trace_create_file("set_ftrace_filter", TRACE_MODE_WRITE, parent,
 			  ops, &ftrace_filter_fops);
 
-	trace_create_file("set_ftrace_notrace", 0644, parent,
+	trace_create_file("set_ftrace_notrace", TRACE_MODE_WRITE, parent,
 			  ops, &ftrace_notrace_fops);
 }
 
@@ -6139,19 +6140,19 @@ void ftrace_destroy_filter_files(struct ftrace_ops *ops)
 static __init int ftrace_init_dyn_tracefs(struct dentry *d_tracer)
 {
 
-	trace_create_file("available_filter_functions", 0444,
+	trace_create_file("available_filter_functions", TRACE_MODE_READ,
 			d_tracer, NULL, &ftrace_avail_fops);
 
-	trace_create_file("enabled_functions", 0444,
+	trace_create_file("enabled_functions", TRACE_MODE_READ,
 			d_tracer, NULL, &ftrace_enabled_fops);
 
 	ftrace_create_filter_files(&global_ops, d_tracer);
 
 #ifdef CONFIG_FUNCTION_GRAPH_TRACER
-	trace_create_file("set_graph_function", 0644, d_tracer,
+	trace_create_file("set_graph_function", TRACE_MODE_WRITE, d_tracer,
 				    NULL,
 				    &ftrace_graph_fops);
-	trace_create_file("set_graph_notrace", 0644, d_tracer,
+	trace_create_file("set_graph_notrace", TRACE_MODE_WRITE, d_tracer,
 				    NULL,
 				    &ftrace_graph_notrace_fops);
 #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
@@ -7494,10 +7495,10 @@ static const struct file_operations ftrace_no_pid_fops = {
 
 void ftrace_init_tracefs(struct trace_array *tr, struct dentry *d_tracer)
 {
-	trace_create_file("set_ftrace_pid", 0644, d_tracer,
+	trace_create_file("set_ftrace_pid", TRACE_MODE_WRITE, d_tracer,
 			    tr, &ftrace_pid_fops);
-	trace_create_file("set_ftrace_notrace_pid", 0644, d_tracer,
-			    tr, &ftrace_no_pid_fops);
+	trace_create_file("set_ftrace_notrace_pid", TRACE_MODE_WRITE,
+			  d_tracer, tr, &ftrace_no_pid_fops);
 }
 
 void __init ftrace_init_tracefs_toplevel(struct trace_array *tr,
@@ -7525,7 +7526,9 @@ void ftrace_kill(void)
 }
 
 /**
- * Test if ftrace is dead or not.
+ * ftrace_is_dead - Test if ftrace is dead or not.
+ *
+ * Returns 1 if ftrace is "dead", zero otherwise.
  */
 int ftrace_is_dead(void)
 {

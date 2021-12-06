@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: GPL-2.0
 VERSION = 5
 PATCHLEVEL = 15
-SUBLEVEL = 0
-EXTRAVERSION = -rc6
-NAME = Opossums on Parade
+SUBLEVEL = 5
+EXTRAVERSION =
+NAME = Trick or Treat
 
 # *DOCUMENTATION*
 # To see a list of typical targets execute "make help"
@@ -899,6 +899,12 @@ ifdef CONFIG_FTRACE_MCOUNT_USE_OBJTOOL
   CC_FLAGS_USING	+= -DCC_USING_NOP_MCOUNT
 endif
 ifdef CONFIG_FTRACE_MCOUNT_USE_RECORDMCOUNT
+# ensure -fcf-protection is disabled when using retpoline as it is
+# incompatible with -mindirect-branch=thunk-extern
+ifdef CONFIG_RETPOLINE
+KBUILD_CFLAGS += $(call cc-option,-fcf-protection=none,)
+endif
+
   ifdef CONFIG_HAVE_C_RECORDMCOUNT
     BUILD_C_RECORDMCOUNT := y
     export BUILD_C_RECORDMCOUNT
