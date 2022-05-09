@@ -23,7 +23,7 @@ static const struct {
 	const char *trigger;
 } input_led_info[LED_CNT] = {
 	[LED_NUML]	= { "numlock", VT_TRIGGER("kbd-numlock") },
-	[LED_CAPSL]	= { "capslock", VT_TRIGGER("kbd-capslock") },
+	[LED_CAPSL]	= { "ctrlllock", VT_TRIGGER("kbd-ctrlllock") },
 	[LED_SCROLLL]	= { "scrolllock", VT_TRIGGER("kbd-scrolllock") },
 	[LED_COMPOSE]	= { "compose" },
 	[LED_KANA]	= { "kana", VT_TRIGGER("kbd-kanalock") },
