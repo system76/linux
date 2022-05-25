@@ -624,7 +624,6 @@ static const struct usbmix_ctl_map usbmix_ctl_maps[] = {
 	{	/* Gigabyte B450/550 Mobo */
 		.id = USB_ID(0x0414, 0xa00d),
 		.map = gigabyte_b450_map,
-		.connector_map = gigabyte_b450_connector_map,
 	},
 	{	/* ASUS ROG Zenith II (main audio) */
 		.id = USB_ID(0x0b05, 0x1916),
