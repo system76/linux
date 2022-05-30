@@ -1,0 +1,62 @@
+#!/bin/bash -eu
+
+if [ -f debian/debian.env ]; then
+	# shellcheck disable=SC1091
+	. debian/debian.env
+fi
+
+if [ ! -d "${DEBIAN}" ]; then
+	echo You must run this script from the top directory of this repository.
+	exit 1
+fi
+
+CONF="${DEBIAN}"/etc/update.conf
+if [ -f "${CONF}" ]; then
+	# shellcheck disable=SC1090
+	. "${CONF}"
+fi
+
+FOREIGN_ARCHES=""
+LOCAL_CONF="${DEBIAN}/etc/local.conf"
+if [ -f "${LOCAL_CONF}" ]; then
+	# shellcheck disable=SC1090
+	. "${LOCAL_CONF}"
+fi
+
+SKIP_RULES_D=${SKIP_RULES_D:-}
+
+#
+# Update configs from master
+#
+rsync -avc --delete "${DEBIAN_MASTER}/config/" "${DEBIAN}/config"
+
+#
+# Update package and DTB settings from master.
+#
+if [ -z "${SKIP_RULES_D}" ] ; then
+	rsync -avc "${DEBIAN_MASTER}/rules.d/"*.mk "${DEBIAN}/rules.d/"
+fi
+
+# Remove the .mk files from the arch's that are not supported
+for i in ${FOREIGN_ARCHES}
+do
+	rm -f "${DEBIAN}/rules.d/${i}.mk"
+	git rm -f --ignore-unmatch "${DEBIAN}/rules.d/${i}.mk" || true
+done
+
+#
+# Update modprobe.d from master
+#
+# Some releases (trusty) don't have this directory, and rsync would fail
+# without this check.
+if [ -d "${DEBIAN}/modprobe.d/" ]; then
+	rsync -avc --delete "${DEBIAN_MASTER}/modprobe.d/" "${DEBIAN}/modprobe.d"
+fi
+
+cp -p "${DEBIAN_MASTER}/control.d/"*.inclusion-list "${DEBIAN}/control.d"
+
+cp -p "${DEBIAN_MASTER}/reconstruct" "${DEBIAN}/reconstruct"
+
+if [ -x "${DEBIAN}/scripts/helpers/local-mangle" ]; then
+	"./${DEBIAN}/scripts/helpers/local-mangle"
+fi
