@@ -55,7 +55,7 @@ Build-Depends-Indep:
  fonts-noto-cjk <!stage1>,
  latexmk <!stage1>,
  librsvg2-bin <!stage1>,
-Vcs-Git: git://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/UNRELEASED
+Vcs-Git: git://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/kinetic
 XS-Testsuite: autopkgtest
 #XS-Testsuite-Depends: gcc-4.7 binutils
 

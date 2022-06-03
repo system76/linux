@@ -1,6 +1,6 @@
-linux (5.18.1-051801.202205300835) kinetic; urgency=low
+linux (5.18.1-76051801.202205300835) kinetic; urgency=low
 
+  [ Mainline Build ]
   Mainline build at commit: v5.18.1
 
- -- Mainline Build <kernel@kathleen>  Mon, 30 May 2022 08:35:30 +0000
-
+ -- Jeremy Soller <jeremy@system76.com>  Fri, 03 Jun 2022 07:23:43 -0600
