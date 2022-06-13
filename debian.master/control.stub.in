@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Ubuntu Kernel Team <kernel-team@lists.ubuntu.com>
 Standards-Version: 3.9.4.0
 Build-Depends:
- debhelper-compat (= 10),
+ debhelper (>= 10),
  cpio,
  kmod <!stage1>,
  makedumpfile [amd64] <!stage1>,
@@ -37,6 +37,8 @@ Build-Depends:
  curl <!stage1>,
  zstd [amd64 s390x] <!stage1>,
  dwarves (>= 1.21) [amd64 arm64 armhf ppc64el s390x riscv64] <!stage1>,
+ binutils-dev <!stage1>,
+ python3-dev <!stage1>,
 Build-Depends-Indep:
  xmlto <!stage1>,
  docbook-utils <!stage1>,
