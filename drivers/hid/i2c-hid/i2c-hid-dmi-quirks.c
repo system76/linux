@@ -13,6 +13,7 @@
 
 #include "i2c-hid.h"
 
+const char IOXO_IDENT[] = "IOXO";
 
 struct i2c_hid_desc_override {
 	union {
@@ -413,11 +414,27 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
 		},
 		.driver_data = (void *)&sipodev_desc
 	},
+	{
+		.ident = IOXO_IDENT,
+		.matches = {
+			/* Unfortunately everything other than board_name is set to
+			 * "Default string". Hopefully by matching on the board name
+			 * and a bunch of default strings we still get a reasonably
+			 * narrow filter.
+			 *
+			 * [OVER-12957] */
+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "SCHNEIDER"),
+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Default string"),
+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Default string"),
+			DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "Default string"),
+		},
+		.driver_data = (void *)&sipodev_desc
+	},
 	{ }	/* Terminate list */
 };
 
 
-struct i2c_hid_desc *i2c_hid_get_dmi_i2c_hid_desc_override(uint8_t *i2c_name)
+static struct i2c_hid_desc_override *i2c_hid_get_dmi_i2c_override(uint8_t *i2c_name)
 {
 	struct i2c_hid_desc_override *override;
 	const struct dmi_system_id *system_id;
@@ -427,7 +444,27 @@ struct i2c_hid_desc *i2c_hid_get_dmi_i2c_hid_desc_override(uint8_t *i2c_name)
 		return NULL;
 
 	override = system_id->driver_data;
-	if (strcmp(override->i2c_name, i2c_name))
+	/* Special case for the IOXO laptop: it has the broken SIPODEV
+	 * device, but it reports itself as ALPS instead of SYNA.
+	 *
+	 * [OVER-12957] */
+	if (strcmp(system_id->ident, IOXO_IDENT) == 0) {
+		if (strcmp("ALPS0001:01", i2c_name) != 0)
+			return NULL;
+	} else {
+		if (strcmp(override->i2c_name, i2c_name) != 0)
+			return NULL;
+	}
+
+	return override;
+}
+
+struct i2c_hid_desc *i2c_hid_get_dmi_i2c_hid_desc_override(uint8_t *i2c_name)
+{
+	struct i2c_hid_desc_override *override;
+
+	override = i2c_hid_get_dmi_i2c_override(i2c_name);
+	if (!override)
 		return NULL;
 
 	return override->i2c_hid_desc;
@@ -437,14 +474,8 @@ char *i2c_hid_get_dmi_hid_report_desc_override(uint8_t *i2c_name,
 					       unsigned int *size)
 {
 	struct i2c_hid_desc_override *override;
-	const struct dmi_system_id *system_id;
-
-	system_id = dmi_first_match(i2c_hid_dmi_desc_override_table);
-	if (!system_id)
-		return NULL;
-
-	override = system_id->driver_data;
-	if (strcmp(override->i2c_name, i2c_name))
+	override = i2c_hid_get_dmi_i2c_override(i2c_name);
+	if (!override)
 		return NULL;
 
 	*size = override->hid_report_desc_size;
