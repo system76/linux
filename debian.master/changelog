@@ -1,6 +1,6 @@
-linux (5.18.7-051807.202206251448) kinetic; urgency=low
+linux (5.18.7-76051807.202206251448) kinetic; urgency=low
 
+  [ Mainline Build ]
   Mainline build at commit: v5.18.7
 
- -- Mainline Build <kernel@sita>  Sat, 25 Jun 2022 14:48:50 +0000
-
+ -- Brock Szuszczewicz <bnr@tuta.io>  Tue, 28 Jun 2022 18:01:57 -0600
