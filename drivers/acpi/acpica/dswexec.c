@@ -391,7 +391,8 @@ acpi_status acpi_ds_exec_end_op(struct acpi_walk_state *walk_state)
 		 * All opcodes require operand resolution, with the only exceptions
 		 * being the object_type and size_of operators.
 		 */
-		if (!(walk_state->op_info->flags & AML_NO_OPERAND_RESOLVE)) {
+		if (!(walk_state->op_info->flags & AML_NO_OPERAND_RESOLVE) && 
+		     (walk_state->op_info->flags & AML_HAS_ARGS)) {
 
 			/* Resolve all operands */
 
