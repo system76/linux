@@ -12,7 +12,6 @@
 # CONFIG_ALTERA_STAPL is not set
 # CONFIG_ALTERA_TSE is not set
 # CONFIG_AMIGA_PARTITION is not set
-# CONFIG_ANDROID_BINDER_IPC is not set
 # CONFIG_APDS9802ALS is not set
 # CONFIG_APPLICOM is not set
 # CONFIG_AQTION is not set
