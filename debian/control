@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Ubuntu Kernel Team <kernel-team@lists.ubuntu.com>
 Standards-Version: 3.9.4.0
 Build-Depends:
- gcc-12, gcc-12-aarch64-linux-gnu [arm64] <cross>, gcc-12-arm-linux-gnueabihf [armhf] <cross>, gcc-12-powerpc64le-linux-gnu [ppc64el] <cross>, gcc-12-riscv64-linux-gnu [riscv64] <cross>, gcc-12-s390x-linux-gnu [s390x] <cross>, gcc-12-x86-64-linux-gnu [amd64] <cross>,
+ gcc-11, gcc-11-aarch64-linux-gnu [arm64] <cross>, gcc-11-arm-linux-gnueabihf [armhf] <cross>, gcc-11-powerpc64le-linux-gnu [ppc64el] <cross>, gcc-11-riscv64-linux-gnu [riscv64] <cross>, gcc-11-s390x-linux-gnu [s390x] <cross>, gcc-11-x86-64-linux-gnu [amd64] <cross>,
  debhelper-compat (= 10),
  cpio,
  kmod <!stage1>,
