@@ -1,6 +1,6 @@
-linux (6.1.5-060105.202301121238) lunar; urgency=low
+linux (6.0.12-76060012.202212290932) kinetic; urgency=medium
 
-  Mainline build at commit: v6.1.5
+  [ Mainline Build ]
+  Mainline build at commit: v6.0.5
 
- -- Mainline Build <kernel@kathleen>  Thu, 12 Jan 2023 12:38:40 +0000
-
+ -- Brock Szuszczewicz <brock@szu.email>  Tue, 13 Dec 2022 16:14:04 -0700
