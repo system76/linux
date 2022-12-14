@@ -1,4 +1,4 @@
-linux-unstable (5.17.5) focal; urgency=medium
+linux-unstable (5.17.5-051715) focal; urgency=medium
   [ Upstream Kernel Changes ]
 
   * Rebase to v5.17.5
