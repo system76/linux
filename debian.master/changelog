@@ -1,4 +1,4 @@
-linux-unstable (6.1.0-3.3) kinetic; urgency=medium
+linux-unstable (6.1.0-763.3) kinetic; urgency=medium
 
   * kinetic/linux-unstable: 6.1.0-3.3 -proposed tracker (LP: #1994037)
 
@@ -10,7 +10,7 @@ linux-unstable (6.1.0-3.3) kinetic; urgency=medium
 
   * Rebase to v6.1-rc2
 
- -- Andrea Righi <andrea.righi@canonical.com>  Mon, 24 Oct 2022 15:53:11 +0200
+ -- system76 <system76@pop-os.localdomain>  Wed, 14 Dec 2022 12:57:17 -0700
 
 linux-unstable (6.1.0-2.2) kinetic; urgency=medium
 
