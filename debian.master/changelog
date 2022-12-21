@@ -1,4 +1,4 @@
-linux (6.0.12-76060006.202212290932) kinetic; urgency=medium
+linux (6.0.12-76060012.202212290932) kinetic; urgency=medium
 
   [ Mainline Build ]
   Mainline build at commit: v6.0.12
