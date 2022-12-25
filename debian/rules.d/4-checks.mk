@@ -23,7 +23,8 @@ retpoline-check-%: $(stampdir)/stamp-install-%
 	$(DROOT)/scripts/checks/retpoline-check "$*" \
 		"$(prev_abidir)" "$(abidir)" "$(skipretpoline)" "$(builddir)/build-$*"
 
-checks-%: module-check-% module-signature-check-% abi-check-% retpoline-check-%
+# checks-%: module-check-% module-signature-check-% abi-check-% retpoline-check-%
+checks-%: module-check-% retpoline-check-%
 	@echo Debug: $@
 
 # Check the config against the known options list.
