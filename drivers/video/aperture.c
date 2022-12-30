@@ -285,6 +285,7 @@ static void aperture_detach_devices(resource_size_t base, resource_size_t size)
 int aperture_remove_conflicting_devices(resource_size_t base, resource_size_t size,
 					bool primary, const char *name)
 {
+#if 0
 	/*
 	 * If a driver asked to unregister a platform device registered by
 	 * sysfb, then can be assumed that this is a driver for a display
@@ -295,7 +296,7 @@ int aperture_remove_conflicting_devices(resource_size_t base, resource_size_t si
 	 * was already probed and prevent sysfb to register devices later.
 	 */
 	sysfb_disable();
-
+#endif
 	aperture_detach_devices(base, size);
 
 	/*
