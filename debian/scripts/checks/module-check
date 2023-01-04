@@ -1,0 +1,131 @@
+#!/usr/bin/python3
+#
+# Check modules changes
+#
+# To skip the modules check, add a file
+#   debian.<foo>/abi/<arch>/ignore.modules
+# or
+#   debian.<foo>/abi/<arch>/<flavor>.ignore.modules
+#
+# To ignore a list of modules, add the modules to the file
+#   debian.<foo>/abi/modules.ignore
+#
+
+import os
+import sys
+
+if len(sys.argv) < 4 or len(sys.argv) > 5:
+    print('Usage: module-check <flavor> <prev_abidir> <abidir> [<skipmodule>]')
+    sys.exit(2)
+
+flavor, prev_abidir, abidir = sys.argv[1:4]  # pylint: disable=W0632
+if len(sys.argv) > 4:
+    skipmodule = sys.argv[4].lower() in ['1', 'true', 'yes']
+else:
+    skipmodule = False
+
+print('II: Checking modules for {}...'.format(flavor), end='')
+
+if ((os.path.exists('{}/ignore.modules'.format(prev_abidir)) or
+     os.path.exists('{}/{}.ignore.modules'.format(prev_abidir, flavor)))):
+    print('WW: Explicitly ignoring modules')
+    print('II: Done')
+    sys.exit(0)
+
+curr_modules = '{}/{}.modules'.format(abidir, flavor)
+prev_modules = '{}/{}.modules'.format(prev_abidir, flavor)
+if not os.path.exists(curr_modules) or not os.path.exists(prev_modules):
+    print('II: Previous or current modules file missing!')
+    print('    {}'.format(curr_modules))
+    print('    {}'.format(prev_modules))
+    if skipmodule:
+        print('WW: Explicitly asked to ignore failures')
+        print('II: Done')
+        sys.exit(0)
+    print('EE: Missing modules file')
+    sys.exit(1)
+
+print()
+
+modules = {}
+modules_ignore = {}
+
+# See if we have any ignores
+print('    Reading modules to ignore...', end='')
+ignore = 0
+prev_modules_ignore = '{}/../modules.ignore'.format(prev_abidir)
+if os.path.exists(prev_modules_ignore):
+    with open(prev_modules_ignore) as fh:
+        for mod in fh:
+            mod = mod.strip()
+            if mod.startswith('#'):
+                continue
+            modules_ignore[mod] = 1
+            ignore += 1
+print('read {} modules.'.format(ignore))
+
+# Read new modules first
+print('    Reading new modules...', end='')
+new_count = 0
+for f in (curr_modules, curr_modules + '.builtin'):
+    if not os.path.exists(f):
+        continue
+    with open(f) as fh:
+        for mod in fh:
+            mod = mod.strip()
+            modules[mod] = {'new': 1}
+            new_count += 1
+print('read {} modules.'.format(new_count))
+
+# Now the old modules
+print('    Reading old modules...', end='')
+old_count = 0
+for f in (prev_modules, prev_modules + '.builtin'):
+    if not os.path.exists(f):
+        continue
+    with open(f) as fh:
+        for mod in fh:
+            mod = mod.strip()
+            if mod not in modules:
+                modules[mod] = {}
+            modules[mod]['old'] = 1
+            old_count += 1
+print('read {} modules.'.format(old_count))
+
+print('II: Checking for modules changes...')
+new = 0
+missing = 0
+missing_ignored = 0
+error = False
+for mod, vals in modules.items():
+    # New modules
+    if 'old' not in vals:
+        print('    NEW: {}'.format(mod))
+        new += 1
+
+    # Missing modules
+    if 'new' not in vals:
+        missing += 0
+        if mod in modules_ignore:
+            ignored = ' (ignored)'
+            missing_ignored += 1
+        else:
+            ignored = ''
+            error = True
+        print('    MISS : {}{}'.format(mod, ignored))
+
+if new > 0:
+    print('II: {} new modules'.format(new))
+
+if missing > 0:
+    print('II: {} missing modules ({} ignored)'.format(missing, missing_ignored))
+
+if error:
+    if skipmodule:
+        print('WW: Explicitly asked to ignore failures')
+    else:
+        print('EE: Missing modules')
+        sys.exit(1)
+
+print('II: Done')
+sys.exit(0)

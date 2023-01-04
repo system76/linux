@@ -1,0 +1,139 @@
+#!/usr/bin/python3
+#
+# Check ABI changes
+#
+# To skip the ABI checks, add a file
+#  debian.<foo>/abi/<arch>/ignore.abi
+# or
+#  debian.<foo>/abi/<arch>/<flavor>.ignore.abi
+#
+# To ignore a list of symbols, add the symbols to the file
+#   debian.<foo>/abi/abi.ignore
+#
+
+import os
+import re
+import sys
+
+def decode_symline(line):
+    comps = re.sub(r'\s+', ' ', line).split(' ')
+    if comps[0].startswith('EXPORT_SYMBOL'):
+        stype, sloc, shash, sname = comps
+    else:
+        stype, shash, sname, sloc = comps[1:]
+    return sname, {'type': stype, 'loc': sloc, 'hash': shash}
+
+if len(sys.argv) < 4 or len(sys.argv) > 5:
+    print('Usage: abi-check <flavor> <prev_abidir> <abidir> [<skipabi>]')
+    sys.exit(2)
+
+flavor, prev_abidir, abidir = sys.argv[1:4]  # pylint: disable=W0632
+if len(sys.argv) > 4:
+    skipabi = sys.argv[4].lower() in ['1', 'true', 'yes']
+else:
+    skipabi = False
+
+print('II: Checking ABI for {}...'.format(flavor), end='')
+
+if ((os.path.exists('{}/ignore.abi'.format(prev_abidir)) or
+     os.path.exists('{}/{}.ignore.abi'.format(prev_abidir, flavor)))):
+    print('WW: Explicitly ignoring ABI')
+    print('II: Done')
+    sys.exit(0)
+
+curr_abi = '{}/{}'.format(abidir, flavor)
+prev_abi = '{}/{}'.format(prev_abidir, flavor)
+if not os.path.exists(curr_abi) or not os.path.exists(prev_abi):
+    print('II: Previous or current ABI file missing!')
+    print('    {}'.format(curr_abi))
+    print('    {}'.format(prev_abi))
+    if skipabi:
+        print('WW: Explicitly asked to ignore failures')
+        print('II: Done')
+        sys.exit(0)
+    print('EE: Missing ABI file')
+    sys.exit(1)
+
+print()
+
+symbols = {}
+symbols_ignore = {}
+
+# See if we have any ignores
+print('    Reading symbols to ignore...', end='')
+ignore = 0
+prev_abi_ignore = '{}/../abi.ignore'.format(prev_abidir)
+if os.path.exists(prev_abi_ignore):
+    with open(prev_abi_ignore) as fh:
+        for sym in fh:
+            sym = sym.strip()
+            if sym.startswith('#'):
+                continue
+            symbols_ignore[sym] = 1
+            ignore += 1
+print('read {} symbols.'.format(ignore))
+
+# Read new symbols first
+print('    Reading new symbols...', end='')
+new_count = 0
+with open('{}/{}'.format(abidir, flavor)) as fh:
+    for line in fh:
+        sym, vals = decode_symline(line.strip())
+        symbols[sym] = vals
+        new_count += 1
+print('read {} symbols.'.format(new_count))
+
+# Now the old symbols
+print('    Reading old symbols...', end='')
+old_count = 0
+with open('{}/{}'.format(prev_abidir, flavor)) as fh:
+    for line in fh:
+        sym, vals = decode_symline(line.strip())
+        if sym not in symbols:
+            symbols[sym] = {}
+        symbols[sym]['old'] = vals
+        old_count += 1
+print('read {} symbols.'.format(old_count))
+
+print('II: Checking for ABI changes...')
+changed_loc = 0
+changed_type = 0
+error = False
+for sym, vals in symbols.items():
+    # Ignore new symbols
+    if 'old' not in vals:
+        continue
+
+    # Changes in location don't hurt us, but log it anyway
+    if vals['loc'] != vals['old']['loc']:
+        changed_loc += 1
+        print('    MOVE : {:40} : {} => {}'.format(sym, vals['old']['loc'],
+                                                   vals['loc']))
+
+    # Changes from GPL to non-GPL are bad
+    if ((vals['old']['type'] == 'EXPORT_SYMBOL_GPL' and
+         vals['type'] != 'EXPORT_SYMBOL_GPL')):
+        changed_type += 1
+        if sym in symbols_ignore or vals['loc'] in symbols_ignore:
+            ignored = ' (ignore)'
+        else:
+            ignored = ''
+            error = True
+        print('    TYPE : {:40} : {} => {}{}'.format(sym, vals['old']['type'],
+                                                     vals['type'], ignored))
+
+if changed_loc > 0:
+    print('II: {} symbols changed location'.format(changed_loc))
+
+if changed_type > 0:
+    print('II: {} symbols changed export type'.format(changed_type))
+
+if error:
+    if skipabi:
+        print('WW: Explicitly asked to ignore failures')
+    else:
+        print('EE: Symbol types changed')
+        sys.exit(1)
+
+print('II: Done')
+sys.exit(0)
