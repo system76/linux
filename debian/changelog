@@ -1,4 +1,4 @@
-linux (6.2.6-76060206.202303130630) lunar; urgency=low
+linux (6.2.6-76060206.202303130630) focal; urgency=low
 
   [ Mainline Build ]
   Mainline build at commit: v6.2.6
