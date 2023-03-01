@@ -550,13 +550,13 @@ ifneq ($(do_full_build),false)
 endif
 	@touch $@
 
+headers_tmp := $(CURDIR)/debian/tmp-headers
 headers_dir := $(CURDIR)/debian/linux-libc-dev
 
-hmake := $(MAKE) -C $(CURDIR) O=$(headers_dir) \
-	INSTALL_HDR_PATH=$(headers_dir)/install \
+hmake := $(MAKE) -C $(CURDIR) O=$(headers_tmp) \
+	KERNELVERSION=$(abi_release) INSTALL_HDR_PATH=$(headers_tmp)/install \
 	SHELL="$(SHELL)" ARCH=$(header_arch)
 
-.PHONY: install-arch-headers
 install-arch-headers:
 	@echo Debug: $@
 	dh_testdir
@@ -564,11 +564,26 @@ install-arch-headers:
 ifeq ($(do_libc_dev_package),true)
 	dh_prep -plinux-libc-dev
 endif
-	rm -rf $(headers_dir)
-	install -d $(headers_dir)/usr/include/
-	$(hmake) $(conc_level) headers_install
+
+	rm -rf $(headers_tmp)
+	install -d $(headers_tmp) $(headers_dir)/usr/include/
+
+	$(hmake) $(defconfig)
+	mv $(headers_tmp)/.config $(headers_tmp)/.config.old
+	sed -e 's/^# \(CONFIG_MODVERSIONS\) is not set$$/\1=y/' \
+	  -e 's/.*CONFIG_LOCALVERSION_AUTO.*/# CONFIG_LOCALVERSION_AUTO is not set/' \
+	  $(headers_tmp)/.config.old > $(headers_tmp)/.config
+	$(hmake) syncconfig
+	$(hmake) headers_install
+
+	( cd $(headers_tmp)/install/include/ && \
+		find . -name '.' -o -name '.*' -prune -o -print | \
+                cpio -pvd --preserve-modification-time \
+			$(headers_dir)/usr/include/ )
 	mkdir $(headers_dir)/usr/include/$(DEB_HOST_MULTIARCH)
 	mv $(headers_dir)/usr/include/asm $(headers_dir)/usr/include/$(DEB_HOST_MULTIARCH)/
+
+	rm -rf $(headers_tmp)
 
 define dh_all
 	dh_installchangelogs -p$(1)
