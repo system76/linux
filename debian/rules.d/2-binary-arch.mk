@@ -585,6 +585,24 @@ endif
 
 	rm -rf $(headers_tmp)
 
+	# A previous release (6.0.12) placed these files in the system root.
+	# If the hashs match we will remove those folders.
+	folders=("/arch/ e6dce05ba2d4d6b6b0b9d0ca6975df24c4151fc5d591711280f859ae22c6fc73" \
+					 "/include/ c3cdf7d0d113577d3c6e28e80ddf33d7592ebb74b9a365e238da0a8aa5575777" \
+					 "/install/ 3e78926ff88761780168623eb3d507fbe2cafb8463ea0b16d273b9bb10548eb4" \
+					 "/scripts/ 94b3dd019bd62e324c512749f64e91701f56666fd02ce42f3cd91bedd65f9cf0" \
+					); \
+	for i in "${folders[@]}"; do \
+		IFS=' ' read -ra array <<< "$i"; \
+		folder="${array[0]}"; \
+		hash="${array[1]}"; \
+		find "$folder" -type f -print0  | xargs -0 sha256sum > /tmp/linux-libc-dev-cleanup; \
+		if [ "$(sha256sum /tmp/linux-libc-dev-cleanup | sed "s/  \/tmp\/linux-libc-dev-cleanup//")" == "$hash" ]; then \
+			rm "$folder" -rf; \
+		fi; \
+		rm /tmp/linux-libc-dev-cleanup; \
+	done
+
 define dh_all
 	dh_installchangelogs -p$(1)
 	dh_installdocs -p$(1)
