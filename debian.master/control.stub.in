@@ -38,10 +38,8 @@ Build-Depends:
  curl <!stage1>,
  zstd [amd64 s390x] <!stage1>,
  pahole [amd64 arm64 armhf ppc64el s390x riscv64] | dwarves (>= 1.21) [amd64 arm64 armhf ppc64el s390x riscv64] <!stage1>,
- rustc-1.62 [amd64],
- rust-1.62-src [amd64],
- rustfmt-1.62 [amd64],
- bindgen-0.56 [amd64],
+ rust-all [amd64],
+ bindgen [amd64],
  clang [amd64],
  llvm [amd64],
 Build-Depends-Indep:
