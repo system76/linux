@@ -179,6 +179,7 @@ Package: linux-image-generic
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 powerpc ppc64el s390x
 Section: kernel
+Provides: wireguard-modules (= 1.0.0)
 Depends:
  ${misc:Depends},
  linux-image-6.2.6-76060206-generic (= ${source:Version}),
