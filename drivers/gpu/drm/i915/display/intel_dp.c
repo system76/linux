@@ -5086,8 +5086,10 @@ has_gamut_metadata_dip(struct drm_i915_private *i915, enum port port)
 	if (DISPLAY_VER(i915) >= 11)
 		return true;
 
+    /* HACK
 	if (port == PORT_A)
 		return false;
+    */
 
 	if (IS_HASWELL(i915) || IS_BROADWELL(i915) ||
 	    DISPLAY_VER(i915) >= 9)
