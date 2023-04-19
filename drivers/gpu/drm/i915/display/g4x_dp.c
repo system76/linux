@@ -1386,7 +1386,8 @@ bool g4x_dp_init(struct drm_i915_private *dev_priv,
 			dig_port->connected = ibx_digital_port_connected;
 	}
 
-	if (port != PORT_A)
+	// MORE HAXX
+	//if (port != PORT_A)
 		intel_infoframe_init(dig_port);
 
 	dig_port->aux_ch = intel_bios_port_aux_ch(dev_priv, port);
