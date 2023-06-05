@@ -20738,6 +20738,13 @@ L:	platform-driver-x86@vger.kernel.org
 S:	Maintained
 F:	drivers/platform/x86/system76_acpi.c
 
+SYSTEM76 THELIO IO DRIVER
+M:	Jeremy Soller <jeremy@system76.com>
+M:	System76 <info@system76.com>
+L:	linux-hwmon@vger.kernel.org
+S:	Maintained
+F:	drivers/hwmon/system76-thelio-io.c
+
 SYSV FILESYSTEM
 S:	Orphan
 F:	Documentation/filesystems/sysv-fs.rst
