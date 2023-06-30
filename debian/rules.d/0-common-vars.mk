@@ -238,7 +238,7 @@ kmake = make ARCH=$(build_arch) \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
 	HOSTCC=$(HOSTCC) \
 	CC=$(CROSS_COMPILE)$(gcc) \
-	RUSTC=rustc-1.62 HOSTRUSTC=rustc-1.62 BINDGEN=bindgen-0.56 RUSTFMT=rustfmt-1.62 RUST_LIB_SRC=/usr/src/rustc-1.62.1/library \
+	RUSTC=rustc-1.62 HOSTRUSTC=rustc-1.62 BINDGEN=bindgen-0.56 RUSTFMT=rustfmt-1.62 RUST_LIB_SRC=/usr/src/rustc-1.65.0/library \
 	KERNELVERSION=$(abi_release)-$(target_flavour) \
 	CONFIG_DEBUG_SECTION_MISMATCH=y \
 	KBUILD_BUILD_VERSION="$(uploadnum)" \
