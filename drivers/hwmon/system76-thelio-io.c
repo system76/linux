@@ -21,6 +21,7 @@
 #include <linux/module.h>
 #include <linux/mutex.h>
 #include <linux/slab.h>
+#include <linux/suspend.h>
 #include <linux/types.h>
 
 #define BUFFER_SIZE 32
@@ -32,11 +33,15 @@
 
 #define CMD_FAN_GET  7
 #define CMD_FAN_SET 8
+#define CMD_LED_SET_MODE 16
 #define CMD_FAN_TACH 22
 
 struct thelio_io_device {
 	struct hid_device *hdev;
 	struct device *hwmon_dev;
+#ifdef CONFIG_PM_SLEEP
+	struct notifier_block pm_notifier;
+#endif
 	struct completion wait_input_report;
 	struct mutex mutex; /* whenever buffer is used, lock before send_usb_cmd */
 	u8 *buffer;
@@ -55,7 +60,7 @@ static int thelio_io_get_errno(struct thelio_io_device *thelio_io)
 }
 
 /* send command, check for error in response, response in thelio_io->buffer */
-static int send_usb_cmd(struct thelio_io_device *thelio_io, u8 command, u8 byte1, u8 byte2)
+static int send_usb_cmd(struct thelio_io_device *thelio_io, u8 command, u8 byte1, u8 byte2, u8 byte3)
 {
 	unsigned long t;
 	int ret;
@@ -64,6 +69,7 @@ static int send_usb_cmd(struct thelio_io_device *thelio_io, u8 command, u8 byte1
 	thelio_io->buffer[HID_CMD] = command;
 	thelio_io->buffer[HID_DATA] = byte1;
 	thelio_io->buffer[HID_DATA + 1] = byte2;
+	thelio_io->buffer[HID_DATA + 2] = byte3;
 
 	reinit_completion(&thelio_io->wait_input_report);
 
@@ -99,7 +105,7 @@ static int get_data(struct thelio_io_device *thelio_io, int command, int channel
 
 	mutex_lock(&thelio_io->mutex);
 
-	ret = send_usb_cmd(thelio_io, command, channel, 0);
+	ret = send_usb_cmd(thelio_io, command, channel, 0, 0);
 	if (ret)
 		goto out_unlock;
 
@@ -121,7 +127,7 @@ static int set_pwm(struct thelio_io_device *thelio_io, int channel, long val)
 
 	mutex_lock(&thelio_io->mutex);
 
-	ret = send_usb_cmd(thelio_io, CMD_FAN_SET, channel, val);
+	ret = send_usb_cmd(thelio_io, CMD_FAN_SET, channel, val, 0);
 
 	mutex_unlock(&thelio_io->mutex);
 	return ret;
@@ -134,22 +140,22 @@ static int thelio_io_read_string(struct device *dev, enum hwmon_sensor_types typ
 	case hwmon_fan:
 		switch (attr) {
 		case hwmon_fan_label:
-            switch (channel) {
-                case 0:
-                    *str = "CPU Fan";
-                    return 0;
-                case 1:
-                    *str = "Intake Fan";
-                    return 0;
-                case 2:
-                    *str = "GPU Fan";
-                    return 0;
-                case 3:
-                    *str = "Aux Fan";
-                    return 0;
-                default:
-                    break;
-            }
+			switch (channel) {
+				case 0:
+					*str = "CPU Fan";
+					return 0;
+				case 1:
+					*str = "Intake Fan";
+					return 0;
+				case 2:
+					*str = "GPU Fan";
+					return 0;
+				case 3:
+					*str = "Aux Fan";
+					return 0;
+				default:
+					break;
+			}
 		default:
 			break;
 		}
@@ -162,7 +168,7 @@ static int thelio_io_read_string(struct device *dev, enum hwmon_sensor_types typ
 }
 
 static int thelio_io_read(struct device *dev, enum hwmon_sensor_types type,
-		    u32 attr, int channel, long *val)
+			u32 attr, int channel, long *val)
 {
 	struct thelio_io_device *thelio_io = dev_get_drvdata(dev);
 	int ret;
@@ -200,7 +206,7 @@ static int thelio_io_read(struct device *dev, enum hwmon_sensor_types type,
 };
 
 static int thelio_io_write(struct device *dev, enum hwmon_sensor_types type,
-		     u32 attr, int channel, long val)
+			 u32 attr, int channel, long val)
 {
 	struct thelio_io_device *thelio_io = dev_get_drvdata(dev);
 
@@ -221,7 +227,7 @@ static int thelio_io_write(struct device *dev, enum hwmon_sensor_types type,
 };
 
 static umode_t thelio_io_is_visible(const void *data, enum hwmon_sensor_types type,
-			      u32 attr, int channel)
+				  u32 attr, int channel)
 {
 	switch (type) {
 	case hwmon_fan:
@@ -279,49 +285,34 @@ static const struct hwmon_chip_info thelio_io_chip_info = {
 	.info = thelio_io_info,
 };
 
-static int thelio_io_probe_cmd_dev(struct hid_device *hdev)
-{
-	struct thelio_io_device *thelio_io;
-	int ret;
+#ifdef CONFIG_PM_SLEEP
+static int thelio_io_pm(struct notifier_block *nb, unsigned long action, void *data) {
+	struct thelio_io_device * thelio_io = container_of(nb, struct thelio_io_device, pm_notifier);
 
-	thelio_io = devm_kzalloc(&hdev->dev, sizeof(*thelio_io), GFP_KERNEL);
-	if (!thelio_io)
-		return -ENOMEM;
+	switch (action) {
+		case PM_HIBERNATION_PREPARE:
+		case PM_SUSPEND_PREPARE:
+			mutex_lock(&thelio_io->mutex);
+			send_usb_cmd(thelio_io, CMD_LED_SET_MODE, 0, 1, 0);
+			mutex_unlock(&thelio_io->mutex);
+			break;
 
-	thelio_io->buffer = devm_kmalloc(&hdev->dev, BUFFER_SIZE, GFP_KERNEL);
-	if (!thelio_io->buffer)
-		return -ENOMEM;
+		case PM_POST_HIBERNATION:
+		case PM_POST_SUSPEND:
+			mutex_lock(&thelio_io->mutex);
+			send_usb_cmd(thelio_io, CMD_LED_SET_MODE, 0, 0, 0);
+			mutex_unlock(&thelio_io->mutex);
+			break;
 
-	ret = hid_hw_start(hdev, HID_CONNECT_DEFAULT);
-	if (ret)
-		return ret;
-
-	ret = hid_hw_open(hdev);
-	if (ret)
-		goto out_hw_stop;
-
-	thelio_io->hdev = hdev;
-	hid_set_drvdata(hdev, thelio_io);
-	mutex_init(&thelio_io->mutex);
-	init_completion(&thelio_io->wait_input_report);
-
-	hid_device_io_start(hdev);
-
-	thelio_io->hwmon_dev = hwmon_device_register_with_info(&hdev->dev, "system76_thelio_io",
-							 thelio_io, &thelio_io_chip_info, 0);
-	if (IS_ERR(thelio_io->hwmon_dev)) {
-		ret = PTR_ERR(thelio_io->hwmon_dev);
-		goto out_hw_close;
+		case PM_POST_RESTORE:
+		case PM_RESTORE_PREPARE:
+		default:
+			break;
 	}
 
-	return 0;
-
-out_hw_close:
-	hid_hw_close(hdev);
-out_hw_stop:
-	hid_hw_stop(hdev);
-	return ret;
+	return NOTIFY_DONE;
 }
+#endif
 
 static int thelio_io_probe(struct hid_device *hdev, const struct hid_device_id *id)
 {
@@ -363,6 +354,11 @@ static int thelio_io_probe(struct hid_device *hdev, const struct hid_device_id *
 			ret = PTR_ERR(thelio_io->hwmon_dev);
 			goto out_hw_close;
 		}
+
+	#ifdef CONFIG_PM_SLEEP
+		thelio_io->pm_notifier.notifier_call = thelio_io_pm;
+		register_pm_notifier(&thelio_io->pm_notifier);
+	#endif
 	}
 
 	return 0;
@@ -377,6 +373,10 @@ out_hw_stop:
 static void thelio_io_remove(struct hid_device *hdev)
 {
 	struct thelio_io_device *thelio_io = hid_get_drvdata(hdev);
+
+#ifdef CONFIG_PM_SLEEP
+	unregister_pm_notifier(&thelio_io->pm_notifier);
+#endif
 
 	if (thelio_io->hwmon_dev) {
 		hwmon_device_unregister(thelio_io->hwmon_dev);
