@@ -1424,6 +1424,9 @@ static const struct x86_cpu_id intel_idle_ids[] __initconst = {
 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		&idle_cpu_adl),
 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,		&idle_cpu_adl_l),
 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_N,		&idle_cpu_adl_n),
+	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE,		&idle_cpu_adl),
+	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,	&idle_cpu_adl_n),
+	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	&idle_cpu_adl),
 	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X,	&idle_cpu_spr),
 	X86_MATCH_INTEL_FAM6_MODEL(EMERALDRAPIDS_X,	&idle_cpu_spr),
 	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNL,	&idle_cpu_knl),
@@ -1864,6 +1867,9 @@ static void __init intel_idle_init_cstates_icpu(struct cpuidle_driver *drv)
 	case INTEL_FAM6_ALDERLAKE:
 	case INTEL_FAM6_ALDERLAKE_L:
 	case INTEL_FAM6_ALDERLAKE_N:
+	case INTEL_FAM6_RAPTORLAKE:
+	case INTEL_FAM6_RAPTORLAKE_P:
+	case INTEL_FAM6_RAPTORLAKE_S:
 		adl_idle_state_table_update();
 		break;
 	}
