@@ -45,7 +45,7 @@ Build-Depends:
  rust-1.62-src [amd64],
  rustfmt-1.62 [amd64],
  bindgen-0.56 [amd64],
- libstdc++-dev,
+ libstdc++-12-dev,
 Build-Depends-Indep:
  xmlto <!stage1>,
  docbook-utils <!stage1>,
