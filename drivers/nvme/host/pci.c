@@ -2915,6 +2915,11 @@ static unsigned long check_vendor_combination_bug(struct pci_dev *pdev)
 		    dmi_match(DMI_BOARD_NAME, "NS5x_7xPU") ||
 		    dmi_match(DMI_BOARD_NAME, "PH4PRX1_PH6PRX1"))
 			return NVME_QUIRK_FORCE_NO_SIMPLE_SUSPEND;
+	} else if (pdev->vendor == 0x2646 && pdev->device == 0x5013) {
+		// Apply the quirk to KC3000 as well on System76 Darter Pro.
+		if (dmi_match(DMI_PRODUCT_VERSION, "darp8") ||
+		    dmi_match(DMI_PRODUCT_VERSION, "darp9"))
+			return NVME_QUIRK_FORCE_NO_SIMPLE_SUSPEND;
 	}
 
 	return 0;
