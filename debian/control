@@ -6,7 +6,7 @@ XSC-Ubuntu-Compatible-Signing: ubuntu/4 pro/3
 Rules-Requires-Root: no
 Standards-Version: 3.9.4.0
 Build-Depends:
- gcc-12, gcc-12-aarch64-linux-gnu [arm64] <cross>, gcc-12-arm-linux-gnueabihf [armhf] <cross>, gcc-12-powerpc64le-linux-gnu [ppc64el] <cross>, gcc-12-riscv64-linux-gnu [riscv64] <cross>, gcc-12-s390x-linux-gnu [s390x] <cross>, gcc-12-x86-64-linux-gnu [amd64] <cross>,
+ gcc-8, gcc-8-aarch64-linux-gnu [arm64] <cross>, gcc-8-arm-linux-gnueabihf [armhf] <cross>, gcc-8-powerpc64le-linux-gnu [ppc64el] <cross>, gcc-8-riscv64-linux-gnu [riscv64] <cross>, gcc-8-s390x-linux-gnu [s390x] <cross>, gcc-8-x86-64-linux-gnu [amd64] <cross>,
  debhelper-compat (= 10),
  cpio,
  kmod <!stage1>,
@@ -42,23 +42,23 @@ Build-Depends:
  curl <!stage1>,
  zstd <!stage1>,
  pahole [amd64 arm64 armhf ppc64el s390x riscv64] | dwarves (>= 1.21) [amd64 arm64 armhf ppc64el s390x riscv64] <!stage1>,
- clang-15 [amd64 arm64 armhf ppc64el riscv64 s390x],
- libclang1-15 [amd64 arm64 armhf ppc64el riscv64 s390x],
+ clang-10 [amd64 arm64 armhf ppc64el riscv64 s390x],
+ libclang1-10 [amd64 arm64 armhf ppc64el riscv64 s390x],
  rustc [amd64 arm64 armhf ppc64el riscv64 s390x],
  rust-src [amd64 arm64 armhf ppc64el riscv64 s390x],
  bindgen-0.56 [amd64 arm64 armhf ppc64el riscv64 s390x],
- libstdc++-12-dev,
+ libstdc++-8-dev,
 Build-Depends-Indep:
  xmlto <!stage1>,
  bzip2 <!stage1>,
  sharutils <!stage1>,
  asciidoc <!stage1>,
  python3-docutils <!stage1>,
-Vcs-Git: git://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/noble
+Vcs-Git: git://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/bionic
 XS-Testsuite: autopkgtest
 #XS-Testsuite-Depends: gcc-4.7 binutils
 
-Package: linux-headers-6.8.0-76060800daily20240311
+Package: linux-headers-6.8.0-76060800
 Build-Profiles: <!stage1>
 Architecture: all
 Multi-Arch: foreign
@@ -68,32 +68,32 @@ Depends: ${misc:Depends}, coreutils
 Description: Header files related to Linux kernel version 6.8.0
  This package provides kernel header files for version 6.8.0, for sites
  that want the latest kernel headers. Please read
- /usr/share/doc/linux-headers-6.8.0-76060800daily20240311/debian.README.gz for details
+ /usr/share/doc/linux-headers-6.8.0-76060800/debian.README.gz for details
 
-Package: linux-tools-6.8.0-76060800daily20240311
+Package: linux-tools-6.8.0-76060800
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: devel
 Priority: optional
 Depends: ${misc:Depends}, ${shlibs:Depends}, linux-tools-common
-Description: Linux kernel version specific tools for version 6.8.0-76060800daily20240311
+Description: Linux kernel version specific tools for version 6.8.0-76060800
  This package provides the architecture dependant parts for kernel
  version locked tools (such as perf and x86_energy_perf_policy) for
- version 6.8.0-76060800daily20240311 on
+ version 6.8.0-76060800 on
  64 bit x86.
- You probably want to install linux-tools-6.8.0-76060800daily20240311-<flavour>.
+ You probably want to install linux-tools-6.8.0-76060800-<flavour>.
 
-Package: linux-cloud-tools-6.8.0-76060800daily20240311
+Package: linux-cloud-tools-6.8.0-76060800
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf
 Section: devel
 Priority: optional
 Depends: ${misc:Depends}, ${shlibs:Depends}, linux-cloud-tools-common
-Description: Linux kernel version specific cloud tools for version 6.8.0-76060800daily20240311
+Description: Linux kernel version specific cloud tools for version 6.8.0-76060800
  This package provides the architecture dependant parts for kernel
- version locked tools for cloud tools for version 6.8.0-76060800daily20240311 on
+ version locked tools for cloud tools for version 6.8.0-76060800 on
  64 bit x86.
- You probably want to install linux-cloud-tools-6.8.0-76060800daily20240311-<flavour>.
+ You probably want to install linux-cloud-tools-6.8.0-76060800-<flavour>.
 
 # linux-meta {
 
@@ -103,7 +103,7 @@ Architecture: amd64 armhf arm64 powerpc ppc64el s390x
 Section: kernel
 Depends:
  ${misc:Depends},
- linux-headers-6.8.0-76060800daily20240311-generic (= ${source:Version})
+ linux-headers-6.8.0-76060800-generic (= ${source:Version})
 Description: Generic Linux kernel headers
  This package will always depend on the latest generic kernel headers
  available.
@@ -115,7 +115,7 @@ Section: kernel
 Provides: wireguard-modules (= 1.0.0)
 Depends:
  ${misc:Depends},
- linux-image-6.8.0-76060800daily20240311-generic (= ${source:Version}),
+ linux-image-6.8.0-76060800-generic (= ${source:Version}),
  linux-firmware,
  intel-microcode [amd64],
  amd64-microcode [amd64]
@@ -131,7 +131,7 @@ Section: kernel
 Provides: linux-tools
 Depends:
  ${misc:Depends},
- linux-tools-6.8.0-76060800daily20240311-generic (= ${source:Version})
+ linux-tools-6.8.0-76060800-generic (= ${source:Version})
 Description: Generic Linux kernel tools
  This package will always depend on the latest generic kernel tools
  available.
@@ -143,7 +143,7 @@ Section: kernel
 Provides: linux-cloud-tools
 Depends:
  ${misc:Depends},
- linux-cloud-tools-6.8.0-76060800daily20240311-generic (= ${source:Version})
+ linux-cloud-tools-6.8.0-76060800-generic (= ${source:Version})
 Description: Generic Linux kernel cloud tools
  This package will always depend on the latest generic kernel cloud tools
  available.
@@ -248,17 +248,17 @@ Description: Linux kernel source for version 6.8.0 with Ubuntu patches
  package instead.
 
 
-Package: linux-image-6.8.0-76060800daily20240311-generic
+Package: linux-image-6.8.0-76060800-generic
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: kernel
 Priority: optional
 Provides: linux-image, fuse-module, kvm-api-4, redhat-cluster-modules, ivtv-modules, virtualbox-guest-modules [amd64], ${linux:rprovides}
-Depends: ${misc:Depends}, ${shlibs:Depends}, kmod, linux-base (>= 4.5ubuntu1~16.04.1), linux-modules-6.8.0-76060800daily20240311-generic
+Depends: ${misc:Depends}, ${shlibs:Depends}, kmod, linux-base (>= 4.5ubuntu1~16.04.1), linux-modules-6.8.0-76060800-generic
 Recommends: kernelstub [amd64] | grub-pc [amd64] | grub-efi-amd64 [amd64] | grub-efi-ia32 [amd64] | grub [amd64] | lilo [amd64] | flash-kernel [armhf arm64] | grub-efi-arm64 [arm64] | grub-efi-arm [armhf] | grub-ieee1275 [ppc64el], initramfs-tools | linux-initramfs-tool
 Breaks: flash-kernel (<< 3.90ubuntu2) [arm64 armhf], s390-tools (<< 2.3.0-0ubuntu3) [s390x]
-Conflicts: linux-image-unsigned-6.8.0-76060800daily20240311-generic
-Suggests: fdutils, linux-tools, linux-headers-6.8.0-76060800daily20240311-generic, linux-modules-extra-6.8.0-76060800daily20240311-generic
+Conflicts: linux-image-unsigned-6.8.0-76060800-generic
+Suggests: fdutils, linux-tools, linux-headers-6.8.0-76060800-generic, linux-modules-extra-6.8.0-76060800-generic
 Description: Linux kernel image for version 6.8.0 on 64 bit x86 SMP
  This package contains the Linux kernel image for version 6.8.0 on
  64 bit x86 SMP.
@@ -271,7 +271,7 @@ Description: Linux kernel image for version 6.8.0 on 64 bit x86 SMP
  the linux-generic meta-package, which will ensure that upgrades work
  correctly, and that supporting packages are also installed.
 
-Package: linux-modules-6.8.0-76060800daily20240311-generic
+Package: linux-modules-6.8.0-76060800-generic
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: kernel
@@ -291,12 +291,12 @@ Description: Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
  the linux-generic meta-package, which will ensure that upgrades work
  correctly, and that supporting packages are also installed.
 
-Package: linux-modules-extra-6.8.0-76060800daily20240311-generic
+Package: linux-modules-extra-6.8.0-76060800-generic
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: kernel
 Priority: optional
-Depends: ${misc:Depends}, ${shlibs:Depends}, linux-modules-6.8.0-76060800daily20240311-generic, wireless-regdb
+Depends: ${misc:Depends}, ${shlibs:Depends}, linux-modules-6.8.0-76060800-generic, wireless-regdb
 Description: Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
  This package contains the Linux kernel extra modules for version 6.8.0 on
  64 bit x86 SMP.
@@ -313,21 +313,21 @@ Description: Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
  the linux-generic meta-package, which will ensure that upgrades work
  correctly, and that supporting packages are also installed.
 
-Package: linux-headers-6.8.0-76060800daily20240311-generic
+Package: linux-headers-6.8.0-76060800-generic
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, linux-headers-6.8.0-76060800daily20240311, ${shlibs:Depends}
+Depends: ${misc:Depends}, linux-headers-6.8.0-76060800, ${shlibs:Depends}
 Provides: linux-headers, linux-headers-3.0
 Description: Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
  This package provides kernel header files for version 6.8.0 on
  64 bit x86 SMP.
  .
  This is for sites that want the latest kernel headers.  Please read
- /usr/share/doc/linux-headers-6.8.0-76060800daily20240311/debian.README.gz for details.
+ /usr/share/doc/linux-headers-6.8.0-76060800/debian.README.gz for details.
 
-Package: linux-lib-rust-6.8.0-76060800daily20240311-generic
+Package: linux-lib-rust-6.8.0-76060800-generic
 Build-Profiles: <!stage1>
 Architecture: amd64
 Multi-Arch: foreign
@@ -338,7 +338,7 @@ Description: Rust library files related to Linux kernel version 6.8.0
  This package provides kernel library files for version 6.8.0, that allow to
  compile out-of-tree kernel modules written in Rust.
 
-Package: linux-image-6.8.0-76060800daily20240311-generic-dbgsym
+Package: linux-image-6.8.0-76060800-generic-dbgsym
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: devel
@@ -355,31 +355,31 @@ Description: Linux kernel debug image for version 6.8.0 on 64 bit x86 SMP
  is uncompressed, and unstripped. This package also includes the
  unstripped modules.
 
-Package: linux-tools-6.8.0-76060800daily20240311-generic
+Package: linux-tools-6.8.0-76060800-generic
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, linux-tools-6.8.0-76060800daily20240311
-Description: Linux kernel version specific tools for version 6.8.0-76060800daily20240311
+Depends: ${misc:Depends}, linux-tools-6.8.0-76060800
+Description: Linux kernel version specific tools for version 6.8.0-76060800
  This package provides the architecture dependant parts for kernel
  version locked tools (such as perf and x86_energy_perf_policy) for
- version 6.8.0-76060800daily20240311 on
+ version 6.8.0-76060800 on
  64 bit x86.
 
-Package: linux-cloud-tools-6.8.0-76060800daily20240311-generic
+Package: linux-cloud-tools-6.8.0-76060800-generic
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, linux-cloud-tools-6.8.0-76060800daily20240311
-Description: Linux kernel version specific cloud tools for version 6.8.0-76060800daily20240311
+Depends: ${misc:Depends}, linux-cloud-tools-6.8.0-76060800
+Description: Linux kernel version specific cloud tools for version 6.8.0-76060800
  This package provides the architecture dependant parts for kernel
- version locked tools for cloud for version 6.8.0-76060800daily20240311 on
+ version locked tools for cloud for version 6.8.0-76060800 on
  64 bit x86.
 
 
-Package: linux-buildinfo-6.8.0-76060800daily20240311-generic
+Package: linux-buildinfo-6.8.0-76060800-generic
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: kernel
@@ -393,18 +393,18 @@ Description: Linux kernel buildinfo for version 6.8.0 on 64 bit x86 SMP
  You likely do not want to install this package.
 
 
-Package: linux-modules-ipu6-6.8.0-76060800daily20240311-generic
+Package: linux-modules-ipu6-6.8.0-76060800-generic
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: kernel
 Priority: optional
 Depends:
  ${misc:Depends},
- linux-image-6.8.0-76060800daily20240311-generic | linux-image-unsigned-6.8.0-76060800daily20240311-generic,
+ linux-image-6.8.0-76060800-generic | linux-image-unsigned-6.8.0-76060800-generic,
 Built-Using: ${linux:BuiltUsing}
-Description: Linux kernel ipu6 modules for version 6.8.0-76060800daily20240311
+Description: Linux kernel ipu6 modules for version 6.8.0-76060800
  This package provides the Linux kernel ipu6 modules for version
- 6.8.0-76060800daily20240311.
+ 6.8.0-76060800.
  .
  You likely do not want to install this package directly. Instead, install the
  one of the linux-modules-ipu6-generic* meta-packages,
@@ -412,18 +412,18 @@ Description: Linux kernel ipu6 modules for version 6.8.0-76060800daily20240311
  also installed.
 
 
-Package: linux-modules-ivsc-6.8.0-76060800daily20240311-generic
+Package: linux-modules-ivsc-6.8.0-76060800-generic
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: kernel
 Priority: optional
 Depends:
  ${misc:Depends},
- linux-image-6.8.0-76060800daily20240311-generic | linux-image-unsigned-6.8.0-76060800daily20240311-generic,
+ linux-image-6.8.0-76060800-generic | linux-image-unsigned-6.8.0-76060800-generic,
 Built-Using: ${linux:BuiltUsing}
-Description: Linux kernel ivsc modules for version 6.8.0-76060800daily20240311
+Description: Linux kernel ivsc modules for version 6.8.0-76060800
  This package provides the Linux kernel ivsc modules for version
- 6.8.0-76060800daily20240311.
+ 6.8.0-76060800.
  .
  You likely do not want to install this package directly. Instead, install the
  one of the linux-modules-ivsc-generic* meta-packages,
@@ -431,18 +431,18 @@ Description: Linux kernel ivsc modules for version 6.8.0-76060800daily20240311
  also installed.
 
 
-Package: linux-modules-iwlwifi-6.8.0-76060800daily20240311-generic
+Package: linux-modules-iwlwifi-6.8.0-76060800-generic
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: kernel
 Priority: optional
 Depends:
  ${misc:Depends},
- linux-image-6.8.0-76060800daily20240311-generic | linux-image-unsigned-6.8.0-76060800daily20240311-generic,
+ linux-image-6.8.0-76060800-generic | linux-image-unsigned-6.8.0-76060800-generic,
 Built-Using: ${linux:BuiltUsing}
-Description: Linux kernel iwlwifi modules for version 6.8.0-76060800daily20240311
+Description: Linux kernel iwlwifi modules for version 6.8.0-76060800
  This package provides the Linux kernel iwlwifi modules for version
- 6.8.0-76060800daily20240311.
+ 6.8.0-76060800.
  .
  You likely do not want to install this package directly. Instead, install the
  one of the linux-modules-iwlwifi-generic* meta-packages,
@@ -450,17 +450,17 @@ Description: Linux kernel iwlwifi modules for version 6.8.0-76060800daily2024031
  also installed.
 
 
-Package: linux-image-6.8.0-76060800daily20240311-generic-64k
+Package: linux-image-6.8.0-76060800-generic-64k
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: kernel
 Priority: optional
 Provides: linux-image, fuse-module, kvm-api-4, redhat-cluster-modules, ivtv-modules, ${linux:rprovides}
-Depends: ${misc:Depends}, ${shlibs:Depends}, kmod, linux-base (>= 4.5ubuntu1~16.04.1), linux-modules-6.8.0-76060800daily20240311-generic-64k
+Depends: ${misc:Depends}, ${shlibs:Depends}, kmod, linux-base (>= 4.5ubuntu1~16.04.1), linux-modules-6.8.0-76060800-generic-64k
 Recommends: grub-efi-arm64 [arm64] | flash-kernel [arm64], initramfs-tools | linux-initramfs-tool
 Breaks: flash-kernel (<< 3.90ubuntu2) [arm64 armhf], s390-tools (<< 2.3.0-0ubuntu3) [s390x]
-Conflicts: linux-image-unsigned-6.8.0-76060800daily20240311-generic-64k
-Suggests: fdutils, linux-tools, linux-headers-6.8.0-76060800daily20240311-generic-64k, linux-modules-extra-6.8.0-76060800daily20240311-generic-64k
+Conflicts: linux-image-unsigned-6.8.0-76060800-generic-64k
+Suggests: fdutils, linux-tools, linux-headers-6.8.0-76060800-generic-64k, linux-modules-extra-6.8.0-76060800-generic-64k
 Description: Linux kernel image for version 6.8.0 on 64 bit x86 SMP
  This package contains the Linux kernel image for version 6.8.0 on
  64 bit x86 SMP.
@@ -473,7 +473,7 @@ Description: Linux kernel image for version 6.8.0 on 64 bit x86 SMP
  the linux-generic-64k meta-package, which will ensure that upgrades work
  correctly, and that supporting packages are also installed.
 
-Package: linux-modules-6.8.0-76060800daily20240311-generic-64k
+Package: linux-modules-6.8.0-76060800-generic-64k
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: kernel
@@ -493,12 +493,12 @@ Description: Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
  the linux-generic-64k meta-package, which will ensure that upgrades work
  correctly, and that supporting packages are also installed.
 
-Package: linux-modules-extra-6.8.0-76060800daily20240311-generic-64k
+Package: linux-modules-extra-6.8.0-76060800-generic-64k
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: kernel
 Priority: optional
-Depends: ${misc:Depends}, ${shlibs:Depends}, linux-modules-6.8.0-76060800daily20240311-generic-64k, wireless-regdb
+Depends: ${misc:Depends}, ${shlibs:Depends}, linux-modules-6.8.0-76060800-generic-64k, wireless-regdb
 Description: Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
  This package contains the Linux kernel extra modules for version 6.8.0 on
  64 bit x86 SMP.
@@ -515,21 +515,21 @@ Description: Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
  the linux-generic-64k meta-package, which will ensure that upgrades work
  correctly, and that supporting packages are also installed.
 
-Package: linux-headers-6.8.0-76060800daily20240311-generic-64k
+Package: linux-headers-6.8.0-76060800-generic-64k
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, linux-headers-6.8.0-76060800daily20240311, ${shlibs:Depends}
+Depends: ${misc:Depends}, linux-headers-6.8.0-76060800, ${shlibs:Depends}
 Provides: linux-headers, linux-headers-3.0
 Description: Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
  This package provides kernel header files for version 6.8.0 on
  64 bit x86 SMP.
  .
  This is for sites that want the latest kernel headers.  Please read
- /usr/share/doc/linux-headers-6.8.0-76060800daily20240311/debian.README.gz for details.
+ /usr/share/doc/linux-headers-6.8.0-76060800/debian.README.gz for details.
 
-Package: linux-lib-rust-6.8.0-76060800daily20240311-generic-64k
+Package: linux-lib-rust-6.8.0-76060800-generic-64k
 Build-Profiles: <!stage1>
 Architecture: amd64
 Multi-Arch: foreign
@@ -540,7 +540,7 @@ Description: Rust library files related to Linux kernel version 6.8.0
  This package provides kernel library files for version 6.8.0, that allow to
  compile out-of-tree kernel modules written in Rust.
 
-Package: linux-image-6.8.0-76060800daily20240311-generic-64k-dbgsym
+Package: linux-image-6.8.0-76060800-generic-64k-dbgsym
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: devel
@@ -557,31 +557,31 @@ Description: Linux kernel debug image for version 6.8.0 on 64 bit x86 SMP
  is uncompressed, and unstripped. This package also includes the
  unstripped modules.
 
-Package: linux-tools-6.8.0-76060800daily20240311-generic-64k
+Package: linux-tools-6.8.0-76060800-generic-64k
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, linux-tools-6.8.0-76060800daily20240311
-Description: Linux kernel version specific tools for version 6.8.0-76060800daily20240311
+Depends: ${misc:Depends}, linux-tools-6.8.0-76060800
+Description: Linux kernel version specific tools for version 6.8.0-76060800
  This package provides the architecture dependant parts for kernel
  version locked tools (such as perf and x86_energy_perf_policy) for
- version 6.8.0-76060800daily20240311 on
+ version 6.8.0-76060800 on
  64 bit x86.
 
-Package: linux-cloud-tools-6.8.0-76060800daily20240311-generic-64k
+Package: linux-cloud-tools-6.8.0-76060800-generic-64k
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, linux-cloud-tools-6.8.0-76060800daily20240311
-Description: Linux kernel version specific cloud tools for version 6.8.0-76060800daily20240311
+Depends: ${misc:Depends}, linux-cloud-tools-6.8.0-76060800
+Description: Linux kernel version specific cloud tools for version 6.8.0-76060800
  This package provides the architecture dependant parts for kernel
- version locked tools for cloud for version 6.8.0-76060800daily20240311 on
+ version locked tools for cloud for version 6.8.0-76060800 on
  64 bit x86.
 
 
-Package: linux-buildinfo-6.8.0-76060800daily20240311-generic-64k
+Package: linux-buildinfo-6.8.0-76060800-generic-64k
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: kernel
@@ -595,18 +595,18 @@ Description: Linux kernel buildinfo for version 6.8.0 on 64 bit x86 SMP
  You likely do not want to install this package.
 
 
-Package: linux-modules-ipu6-6.8.0-76060800daily20240311-generic-64k
+Package: linux-modules-ipu6-6.8.0-76060800-generic-64k
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: kernel
 Priority: optional
 Depends:
  ${misc:Depends},
- linux-image-6.8.0-76060800daily20240311-generic-64k | linux-image-unsigned-6.8.0-76060800daily20240311-generic-64k,
+ linux-image-6.8.0-76060800-generic-64k | linux-image-unsigned-6.8.0-76060800-generic-64k,
 Built-Using: ${linux:BuiltUsing}
-Description: Linux kernel ipu6 modules for version 6.8.0-76060800daily20240311
+Description: Linux kernel ipu6 modules for version 6.8.0-76060800
  This package provides the Linux kernel ipu6 modules for version
- 6.8.0-76060800daily20240311.
+ 6.8.0-76060800.
  .
  You likely do not want to install this package directly. Instead, install the
  one of the linux-modules-ipu6-generic-64k* meta-packages,
@@ -614,18 +614,18 @@ Description: Linux kernel ipu6 modules for version 6.8.0-76060800daily20240311
  also installed.
 
 
-Package: linux-modules-ivsc-6.8.0-76060800daily20240311-generic-64k
+Package: linux-modules-ivsc-6.8.0-76060800-generic-64k
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: kernel
 Priority: optional
 Depends:
  ${misc:Depends},
- linux-image-6.8.0-76060800daily20240311-generic-64k | linux-image-unsigned-6.8.0-76060800daily20240311-generic-64k,
+ linux-image-6.8.0-76060800-generic-64k | linux-image-unsigned-6.8.0-76060800-generic-64k,
 Built-Using: ${linux:BuiltUsing}
-Description: Linux kernel ivsc modules for version 6.8.0-76060800daily20240311
+Description: Linux kernel ivsc modules for version 6.8.0-76060800
  This package provides the Linux kernel ivsc modules for version
- 6.8.0-76060800daily20240311.
+ 6.8.0-76060800.
  .
  You likely do not want to install this package directly. Instead, install the
  one of the linux-modules-ivsc-generic-64k* meta-packages,
@@ -633,18 +633,18 @@ Description: Linux kernel ivsc modules for version 6.8.0-76060800daily20240311
  also installed.
 
 
-Package: linux-modules-iwlwifi-6.8.0-76060800daily20240311-generic-64k
+Package: linux-modules-iwlwifi-6.8.0-76060800-generic-64k
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: kernel
 Priority: optional
 Depends:
  ${misc:Depends},
- linux-image-6.8.0-76060800daily20240311-generic-64k | linux-image-unsigned-6.8.0-76060800daily20240311-generic-64k,
+ linux-image-6.8.0-76060800-generic-64k | linux-image-unsigned-6.8.0-76060800-generic-64k,
 Built-Using: ${linux:BuiltUsing}
-Description: Linux kernel iwlwifi modules for version 6.8.0-76060800daily20240311
+Description: Linux kernel iwlwifi modules for version 6.8.0-76060800
  This package provides the Linux kernel iwlwifi modules for version
- 6.8.0-76060800daily20240311.
+ 6.8.0-76060800.
  .
  You likely do not want to install this package directly. Instead, install the
  one of the linux-modules-iwlwifi-generic-64k* meta-packages,
@@ -652,17 +652,17 @@ Description: Linux kernel iwlwifi modules for version 6.8.0-76060800daily2024031
  also installed.
 
 
-Package: linux-image-6.8.0-76060800daily20240311-generic-lpae
+Package: linux-image-6.8.0-76060800-generic-lpae
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: kernel
 Priority: optional
 Provides: linux-image, fuse-module, kvm-api-4, redhat-cluster-modules, ivtv-modules, ${linux:rprovides}
-Depends: ${misc:Depends}, ${shlibs:Depends}, kmod, linux-base (>= 4.5ubuntu1~16.04.1), linux-modules-6.8.0-76060800daily20240311-generic-lpae
+Depends: ${misc:Depends}, ${shlibs:Depends}, kmod, linux-base (>= 4.5ubuntu1~16.04.1), linux-modules-6.8.0-76060800-generic-lpae
 Recommends: flash-kernel [armhf] | grub-efi-arm [armhf], initramfs-tools | linux-initramfs-tool
 Breaks: flash-kernel (<< 3.90ubuntu2) [arm64 armhf], s390-tools (<< 2.3.0-0ubuntu3) [s390x]
-Conflicts: linux-image-unsigned-6.8.0-76060800daily20240311-generic-lpae
-Suggests: fdutils, linux-tools, linux-headers-6.8.0-76060800daily20240311-generic-lpae, linux-modules-extra-6.8.0-76060800daily20240311-generic-lpae
+Conflicts: linux-image-unsigned-6.8.0-76060800-generic-lpae
+Suggests: fdutils, linux-tools, linux-headers-6.8.0-76060800-generic-lpae, linux-modules-extra-6.8.0-76060800-generic-lpae
 Description: Linux kernel image for version 6.8.0 on 64 bit x86 SMP
  This package contains the Linux kernel image for version 6.8.0 on
  64 bit x86 SMP.
@@ -675,7 +675,7 @@ Description: Linux kernel image for version 6.8.0 on 64 bit x86 SMP
  the linux-generic-lpae meta-package, which will ensure that upgrades work
  correctly, and that supporting packages are also installed.
 
-Package: linux-modules-6.8.0-76060800daily20240311-generic-lpae
+Package: linux-modules-6.8.0-76060800-generic-lpae
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: kernel
@@ -695,12 +695,12 @@ Description: Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
  the linux-generic-lpae meta-package, which will ensure that upgrades work
  correctly, and that supporting packages are also installed.
 
-Package: linux-modules-extra-6.8.0-76060800daily20240311-generic-lpae
+Package: linux-modules-extra-6.8.0-76060800-generic-lpae
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: kernel
 Priority: optional
-Depends: ${misc:Depends}, ${shlibs:Depends}, linux-modules-6.8.0-76060800daily20240311-generic-lpae, wireless-regdb
+Depends: ${misc:Depends}, ${shlibs:Depends}, linux-modules-6.8.0-76060800-generic-lpae, wireless-regdb
 Description: Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
  This package contains the Linux kernel extra modules for version 6.8.0 on
  64 bit x86 SMP.
@@ -717,21 +717,21 @@ Description: Linux kernel extra modules for version 6.8.0 on 64 bit x86 SMP
  the linux-generic-lpae meta-package, which will ensure that upgrades work
  correctly, and that supporting packages are also installed.
 
-Package: linux-headers-6.8.0-76060800daily20240311-generic-lpae
+Package: linux-headers-6.8.0-76060800-generic-lpae
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, linux-headers-6.8.0-76060800daily20240311, ${shlibs:Depends}
+Depends: ${misc:Depends}, linux-headers-6.8.0-76060800, ${shlibs:Depends}
 Provides: linux-headers, linux-headers-3.0
 Description: Linux kernel headers for version 6.8.0 on 64 bit x86 SMP
  This package provides kernel header files for version 6.8.0 on
  64 bit x86 SMP.
  .
  This is for sites that want the latest kernel headers.  Please read
- /usr/share/doc/linux-headers-6.8.0-76060800daily20240311/debian.README.gz for details.
+ /usr/share/doc/linux-headers-6.8.0-76060800/debian.README.gz for details.
 
-Package: linux-lib-rust-6.8.0-76060800daily20240311-generic-lpae
+Package: linux-lib-rust-6.8.0-76060800-generic-lpae
 Build-Profiles: <!stage1>
 Architecture: amd64
 Multi-Arch: foreign
@@ -742,7 +742,7 @@ Description: Rust library files related to Linux kernel version 6.8.0
  This package provides kernel library files for version 6.8.0, that allow to
  compile out-of-tree kernel modules written in Rust.
 
-Package: linux-image-6.8.0-76060800daily20240311-generic-lpae-dbgsym
+Package: linux-image-6.8.0-76060800-generic-lpae-dbgsym
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: devel
@@ -759,31 +759,31 @@ Description: Linux kernel debug image for version 6.8.0 on 64 bit x86 SMP
  is uncompressed, and unstripped. This package also includes the
  unstripped modules.
 
-Package: linux-tools-6.8.0-76060800daily20240311-generic-lpae
+Package: linux-tools-6.8.0-76060800-generic-lpae
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, linux-tools-6.8.0-76060800daily20240311
-Description: Linux kernel version specific tools for version 6.8.0-76060800daily20240311
+Depends: ${misc:Depends}, linux-tools-6.8.0-76060800
+Description: Linux kernel version specific tools for version 6.8.0-76060800
  This package provides the architecture dependant parts for kernel
  version locked tools (such as perf and x86_energy_perf_policy) for
- version 6.8.0-76060800daily20240311 on
+ version 6.8.0-76060800 on
  64 bit x86.
 
-Package: linux-cloud-tools-6.8.0-76060800daily20240311-generic-lpae
+Package: linux-cloud-tools-6.8.0-76060800-generic-lpae
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, linux-cloud-tools-6.8.0-76060800daily20240311
-Description: Linux kernel version specific cloud tools for version 6.8.0-76060800daily20240311
+Depends: ${misc:Depends}, linux-cloud-tools-6.8.0-76060800
+Description: Linux kernel version specific cloud tools for version 6.8.0-76060800
  This package provides the architecture dependant parts for kernel
- version locked tools for cloud for version 6.8.0-76060800daily20240311 on
+ version locked tools for cloud for version 6.8.0-76060800 on
  64 bit x86.
 
 
-Package: linux-buildinfo-6.8.0-76060800daily20240311-generic-lpae
+Package: linux-buildinfo-6.8.0-76060800-generic-lpae
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: kernel
@@ -797,18 +797,18 @@ Description: Linux kernel buildinfo for version 6.8.0 on 64 bit x86 SMP
  You likely do not want to install this package.
 
 
-Package: linux-modules-ipu6-6.8.0-76060800daily20240311-generic-lpae
+Package: linux-modules-ipu6-6.8.0-76060800-generic-lpae
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: kernel
 Priority: optional
 Depends:
  ${misc:Depends},
- linux-image-6.8.0-76060800daily20240311-generic-lpae | linux-image-unsigned-6.8.0-76060800daily20240311-generic-lpae,
+ linux-image-6.8.0-76060800-generic-lpae | linux-image-unsigned-6.8.0-76060800-generic-lpae,
 Built-Using: ${linux:BuiltUsing}
-Description: Linux kernel ipu6 modules for version 6.8.0-76060800daily20240311
+Description: Linux kernel ipu6 modules for version 6.8.0-76060800
  This package provides the Linux kernel ipu6 modules for version
- 6.8.0-76060800daily20240311.
+ 6.8.0-76060800.
  .
  You likely do not want to install this package directly. Instead, install the
  one of the linux-modules-ipu6-generic-lpae* meta-packages,
@@ -816,18 +816,18 @@ Description: Linux kernel ipu6 modules for version 6.8.0-76060800daily20240311
  also installed.
 
 
-Package: linux-modules-ivsc-6.8.0-76060800daily20240311-generic-lpae
+Package: linux-modules-ivsc-6.8.0-76060800-generic-lpae
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: kernel
 Priority: optional
 Depends:
  ${misc:Depends},
- linux-image-6.8.0-76060800daily20240311-generic-lpae | linux-image-unsigned-6.8.0-76060800daily20240311-generic-lpae,
+ linux-image-6.8.0-76060800-generic-lpae | linux-image-unsigned-6.8.0-76060800-generic-lpae,
 Built-Using: ${linux:BuiltUsing}
-Description: Linux kernel ivsc modules for version 6.8.0-76060800daily20240311
+Description: Linux kernel ivsc modules for version 6.8.0-76060800
  This package provides the Linux kernel ivsc modules for version
- 6.8.0-76060800daily20240311.
+ 6.8.0-76060800.
  .
  You likely do not want to install this package directly. Instead, install the
  one of the linux-modules-ivsc-generic-lpae* meta-packages,
@@ -835,18 +835,18 @@ Description: Linux kernel ivsc modules for version 6.8.0-76060800daily20240311
  also installed.
 
 
-Package: linux-modules-iwlwifi-6.8.0-76060800daily20240311-generic-lpae
+Package: linux-modules-iwlwifi-6.8.0-76060800-generic-lpae
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: kernel
 Priority: optional
 Depends:
  ${misc:Depends},
- linux-image-6.8.0-76060800daily20240311-generic-lpae | linux-image-unsigned-6.8.0-76060800daily20240311-generic-lpae,
+ linux-image-6.8.0-76060800-generic-lpae | linux-image-unsigned-6.8.0-76060800-generic-lpae,
 Built-Using: ${linux:BuiltUsing}
-Description: Linux kernel iwlwifi modules for version 6.8.0-76060800daily20240311
+Description: Linux kernel iwlwifi modules for version 6.8.0-76060800
  This package provides the Linux kernel iwlwifi modules for version
- 6.8.0-76060800daily20240311.
+ 6.8.0-76060800.
  .
  You likely do not want to install this package directly. Instead, install the
  one of the linux-modules-iwlwifi-generic-lpae* meta-packages,

@@ -1,4 +1,4 @@
-linux (6.8.0-76060800daily20240311.202403110203) bionic; urgency=low
+linux (6.8.0-76060800.1) bionic; urgency=low
 
   [ Mainline Build ]
   Mainline build at commit: cod/tip/daily/2024-03-11
