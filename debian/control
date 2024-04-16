@@ -5,7 +5,7 @@ Maintainer: Ubuntu Kernel Team <kernel-team@lists.ubuntu.com>
 XSC-Ubuntu-Compatible-Signing: ubuntu/4 pro/3
 Standards-Version: 3.9.4.0
 Build-Depends:
- gcc-11, gcc-11-aarch64-linux-gnu [arm64] <cross>, gcc-11-arm-linux-gnueabihf [armhf] <cross>, gcc-11-powerpc64le-linux-gnu [ppc64el] <cross>, gcc-11-riscv64-linux-gnu [riscv64] <cross>, gcc-11-s390x-linux-gnu [s390x] <cross>, gcc-11-x86-64-linux-gnu [amd64] <cross>,
+ gcc-10, gcc-10-aarch64-linux-gnu [arm64] <cross>, gcc-10-arm-linux-gnueabihf [armhf] <cross>, gcc-10-powerpc64le-linux-gnu [ppc64el] <cross>, gcc-10-riscv64-linux-gnu [riscv64] <cross>, gcc-10-s390x-linux-gnu [s390x] <cross>, gcc-10-x86-64-linux-gnu [amd64] <cross>,
  debhelper-compat (= 10),
  cpio,
  kmod <!stage1>,
@@ -40,10 +40,6 @@ Build-Depends:
  curl <!stage1>,
  zstd [amd64 s390x] <!stage1>,
  dwarves (>= 1.21) [amd64 arm64 armhf ppc64el s390x riscv64] <!stage1>,
- rustc-1.62 [amd64],
- rust-1.62-src [amd64],
- rustfmt-1.62 [amd64],
- bindgen-0.56 [amd64],
  clang [amd64],
  llvm [amd64],
 Build-Depends-Indep:
