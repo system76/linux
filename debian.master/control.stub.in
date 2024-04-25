@@ -62,7 +62,7 @@ Architecture: all
 Multi-Arch: foreign
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, coreutils
+Depends: ${misc:Depends}, coreutils, GCC
 Description: Header files related to Linux kernel version PKGVER
  This package provides kernel header files for version PKGVER, for sites
  that want the latest kernel headers. Please read

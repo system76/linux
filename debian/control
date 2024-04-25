@@ -64,7 +64,7 @@ Architecture: all
 Multi-Arch: foreign
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, coreutils
+Depends: ${misc:Depends}, coreutils, gcc-12
 Description: Header files related to Linux kernel version 6.8.0
  This package provides kernel header files for version 6.8.0, for sites
  that want the latest kernel headers. Please read
