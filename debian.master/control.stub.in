@@ -43,7 +43,6 @@ Build-Depends:
  clang-18 [amd64 arm64 armhf ppc64el riscv64 s390x],
  rustc [amd64 arm64 armhf ppc64el riscv64 s390x],
  rust-src [amd64 arm64 armhf ppc64el riscv64 s390x],
- rustfmt [amd64 arm64 armhf ppc64el riscv64 s390x],
  bindgen-0.65 [amd64 arm64 armhf ppc64el riscv64 s390x],
  libstdc++-dev,
 Build-Depends-Indep:
